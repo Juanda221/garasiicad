@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juanda Saputra — Mechanical Engineering Student</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #eef1ef;
+    --paper-deep: #e6eae7;
+    --grid-line: #d3dad6;
+    --ink: #1c2430;
+    --ink-soft: #56626e;
+    --blue: #2e5c86;
+    --accent: #c4471f;
+    --steel: #8b95a1;
+    --white: #fbfcfb;
+    --font-display: 'IBM Plex Sans Condensed', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --frame-gap: 22px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.55;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-attachment:fixed;
+  }
+
+  .sheet-frame{
+    position:fixed;
+    inset:var(--frame-gap);
+    border:1.5px solid var(--ink);
+    pointer-events:none;
+    z-index:40;
+  }
+  .tick{
+    position:fixed;
+    width:14px; height:14px;
+    border:1.5px solid var(--accent);
+    z-index:41;
+    pointer-events:none;
+  }
+  .tick.tl{top:var(--frame-gap); left:var(--frame-gap); border-right:none; border-bottom:none;}
+  .tick.tr{top:var(--frame-gap); right:var(--frame-gap); border-left:none; border-bottom:none;}
+  .tick.bl{bottom:var(--frame-gap); left:var(--frame-gap); border-right:none; border-top:none;}
+  .tick.br{bottom:var(--frame-gap); right:var(--frame-gap); border-left:none; border-top:none;}
+
+  .page{
+    max-width:1080px;
+    margin:0 auto;
+    padding: calc(var(--frame-gap) + 26px) 32px calc(var(--frame-gap) + 26px);
+  }
+
+  a{color:var(--blue); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:'';width:18px;height:1px;background:var(--accent);}
+
+  h1,h2,h3{
+    font-family:var(--font-display);
+    text-transform:uppercase;
+    letter-spacing:.01em;
+    color:var(--ink);
+    font-weight:700;
+  }
+
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    border-bottom:1.5px solid var(--ink);
+    padding-bottom:14px;
+    margin-bottom:56px;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .topbar .id{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:20px;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+  }
+  .topbar .id span{ color:var(--accent); }
+  nav{
+    display:flex; gap:22px;
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+  }
+  nav a{color:var(--ink-soft);}
+  nav a:hover{color:var(--accent); text-decoration:none;}
+
+  .hero{ padding: 8px 0 46px; }
+  .hero h1{
+    font-size:clamp(34px, 5.4vw, 58px);
+    line-height:1.04;
+    max-width:780px;
+    margin:14px 0 20px;
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--blue);
+    text-decoration: underline;
+    text-decoration-color:var(--accent);
+    text-decoration-thickness:3px;
+    text-underline-offset:6px;
+  }
+  .hero p.lede{
+    max-width:600px;
+    font-size:17px;
+    color:var(--ink-soft);
+    margin-bottom:30px;
+  }
+  .spec-list{
+    display:grid;
+    grid-template-columns:repeat(4, auto);
+    gap:0;
+    border-top:1px solid var(--ink);
+    border-bottom:1px solid var(--ink);
+    max-width:800px;
+  }
+  .spec-list div{
+    padding:12px 18px 12px 0;
+    border-right:1px dashed var(--steel);
+  }
+  .spec-list div:last-child{border-right:none;}
+  .spec-list .k{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--steel);
+    display:block;
+    margin-bottom:4px;
+  }
+  .spec-list .v{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--ink);
+  }
+
+  .dim-divider{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin: 64px 0 30px;
+  }
+  .dim-divider .cap{
+    width:1px; height:14px; background:var(--ink);
+  }
+  .dim-divider .line{
+    flex:1; height:1px; background:var(--ink); position:relative;
+  }
+  .dim-divider .line svg{position:absolute; top:-4px;}
+  .dim-divider .line svg.left{left:0;}
+  .dim-divider .line svg.right{right:0;}
+  .dim-divider .label{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.08em;
+    white-space:nowrap;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .dim-divider .label .num{color:var(--accent); font-weight:600;}
+  .dim-divider .label h2{
+    font-size:22px;
+    letter-spacing:.03em;
+  }
+  .dim-divider .label .of{color:var(--steel); font-size:11px;}
+
+  .work-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+  }
+  .card{
+    background:var(--white);
+    border:1px solid var(--ink);
+    padding:22px 22px 24px;
+    position:relative;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .card::before{
+    content:attr(data-part);
+    position:absolute;
+    top:10px; right:14px;
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    color:var(--steel);
+    letter-spacing:.06em;
+  }
+  .card:hover{
+    transform:translateY(-3px);
+    box-shadow:6px 6px 0 var(--accent);
+  }
+  .card .icon{
+    width:56px; height:56px;
+    margin-bottom:16px;
+    color:var(--blue);
+  }
+  .card:hover .icon{color:var(--accent);}
+  .card h3{
+    font-size:18px;
+    margin-bottom:8px;
+    max-width:90%;
+  }
+  .card p{
+    color:var(--ink-soft);
+    font-size:14.5px;
+    margin-bottom:16px;
+  }
+  .tags{
+    display:flex; flex-wrap:wrap; gap:7px;
+    margin-bottom:14px;
+  }
+  .tags span{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    border:1px solid var(--steel);
+    color:var(--ink-soft);
+    padding:3px 8px;
+  }
+  .card .link{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--steel);
+  }
+
+  .cap-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+  }
+  .cap-col h4{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:12px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--ink);
+  }
+  .cap-col ul{ list-style:none; }
+  .cap-col li{
+    font-size:14px;
+    color:var(--ink-soft);
+    padding:6px 0;
+    border-bottom:1px dotted var(--grid-line);
+  }
+  .cap-col li:last-child{border-bottom:none;}
+
+  .rev-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+  }
+  .rev-table thead th{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    text-align:left;
+    color:var(--white);
+    background:var(--ink);
+    padding:9px 12px;
+  }
+  .rev-table tbody td{
+    padding:14px 12px;
+    border-bottom:1px solid var(--grid-line);
+    vertical-align:top;
+  }
+  .rev-table tbody tr:hover{ background:var(--paper-deep); }
+  .rev-table .rev-id{
+    font-family:var(--font-mono);
+    color:var(--accent);
+    font-weight:600;
+    white-space:nowrap;
+  }
+  .rev-table .role{ font-weight:600; }
+  .rev-table .org{ color:var(--ink-soft); font-size:13px; }
+  .rev-table .date{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    color:var(--steel);
+    white-space:nowrap;
+  }
+
+  .ed-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  .ed-item{
+    border-left:2px solid var(--blue);
+    padding:4px 0 4px 16px;
+  }
+  .ed-item h4{ font-size:15px; margin-bottom:3px; }
+  .ed-item p{ font-size:13.5px; color:var(--ink-soft); }
+  .ed-item .date{ font-family:var(--font-mono); font-size:11.5px; color:var(--steel); }
+
+  .titleblock{
+    margin-top:70px;
+    border:1.5px solid var(--ink);
+  }
+  .tb-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:var(--ink);
+    color:var(--white);
+    padding:14px 20px;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .tb-head h2{
+    color:var(--white);
+    font-size:22px;
+  }
+  .tb-head .cta{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--white);
+    border:1px solid var(--white);
+    padding:8px 14px;
+  }
+  .tb-head .cta:hover{ background:var(--accent); border-color:var(--accent); text-decoration:none;}
+  .tb-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+  }
+  .tb-cell{
+    padding:14px 18px;
+    border-right:1px solid var(--ink);
+    border-top:1px solid var(--ink);
+  }
+  .tb-cell:last-child{border-right:none;}
+  .tb-cell .k{
+    display:block;
+    font-family:var(--font-mono);
+    font-size:10px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--steel);
+    margin-bottom:5px;
+  }
+  .tb-cell .v{
+    font-family:var(--font-mono);
+    font-size:13px;
+  }
+  .tb-cell .v a{color:var(--ink);}
+  .tb-cell .v a:hover{color:var(--accent);}
+
+  footer.legal{
+    text-align:center;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--steel);
+    letter-spacing:.06em;
+    padding:28px 0 6px;
+  }
+
+  .dim-divider .line svg path{
+    stroke-dasharray:14;
+    stroke-dashoffset:14;
+    animation: draw .6s ease forwards;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  @media (prefers-reduced-motion: reduce){
+    .dim-divider .line svg path{ animation:none; stroke-dashoffset:0; }
+    .card{ transition:none; }
+  }
+
+  @media (max-width: 860px){
+    .work-grid{ grid-template-columns:1fr; }
+    .cap-grid{ grid-template-columns:1fr 1fr; }
+    .spec-list{ grid-template-columns:1fr 1fr; }
+    .tb-grid{ grid-template-columns:1fr 1fr; }
+    .ed-grid{ grid-template-columns:1fr; }
+    nav{ display:none; }
+  }
+  @media (max-width: 520px){
+    :root{ --frame-gap:10px; }
+    .page{ padding-left:18px; padding-right:18px; }
+    .cap-grid{ grid-template-columns:1fr; }
+    .spec-list{ grid-template-columns:1fr; }
+    .tb-grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet-frame"></div>
+<div class="tick tl"></div><div class="tick tr"></div><div class="tick bl"></div><div class="tick br"></div>
+
+<div class="page">
+
+  <div class="topbar">
+    <div class="id">JUANDA SAPUTRA <span>/ MECHANICAL ENGINEERING</span></div>
+    <nav>
+      <a href="#work">Proyek</a>
+      <a href="#capabilities">Keahlian</a>
+      <a href="#experience">Pengalaman</a>
+      <a href="#education">Edukasi</a>
+      <a href="#contact">Kontak</a>
+    </nav>
+  </div>
+
+  <section class="hero">
+    <span class="eyebrow">Sheet 1 / 6 — Ringkasan</span>
+    <h1>Engineering Ideas into Precise Designs </h1>
+    <p class="lede">Mahasiswa Teknik Mesin dengan pengalaman langsung sebagai Mechanical Drafter menggunakan AutoCAD, SolidWorks, dan Autodesk Inventor. Aktif di kompetisi rancang bangun mesin tingkat nasional dengan capaian Juara 3 dan Finalis.</p>
+    <div class="spec-list">
+      <div><span class="k">Lokasi</span><span class="v">Mataram, NTB, ID</span></div>
+      <div><span class="k">Fokus</span><span class="v">Desain Mekanikal & Energi</span></div>
+      <div><span class="k">Tools</span><span class="v">Inventor · SolidWorks · Ansys · Autodesk CFD </span></div>
+      <div><span class="k">Status</span><span class="v">Terbuka untuk Magang · Freelance · Kerja</span></div>
+    </div>
+  </section>
+
+  <div class="dim-divider" id="work">
+    <span class="cap"></span>
+    <div class="line">
+      <svg class="left" width="10" height="8"><path d="M9 1L1 4L9 7" stroke="currentColor" fill="none" stroke-width="1.4"/></svg>
+    </div>
+    <div class="label"><span class="num">02</span><h2>Proyek Terpilih</h2><span class="of">/ 06</span></div>
+    <div class="line">
+      <svg class="right" width="10" height="8"><path d="M1 1L9 4L1 7" stroke="currentColor" fill="none" stroke-width="1.4"/></svg>
+    </div>
+    <span class="cap"></span>
+  </div>
+
+  <div class="work-grid">
+
+    <article class="card" data-part="PN-001">
+      <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
+        <rect x="10" y="26" width="26" height="12" rx="1"/>
+        <path d="M36 32h10M46 24v16M46 24h6M46 40h6"/>
+        <path d="M10 20v24" stroke-dasharray="2 2"/>
+      </svg>
+      <h3>Sistem Hidrolik Silinder Press</h3>
+      <p>Merancang sistem hidrolik silinder press untuk unit produksi plastik PET, menunjang kelancaran operasional pabrik. Termasuk survei dan pengambilan dimensi on-site.</p>
+      <div class="tags"><span>Autodesk Inventor</span><span>AutoCAD</span><span>Hidrolik</span></div>
+      <span class="link">PT Bendera Merah Grup — 2026</span>
+    </article>
+
+    <article class="card" data-part="PN-002">
+      <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
+        <circle cx="32" cy="30" r="3"/>
+        <path d="M32 30 L32 10 M32 30 L48 38 M32 30 L18 40"/>
+        <path d="M32 42v14M25 56h14"/>
+      </svg>
+      <h3>Turbin Angin HAWT 100 Watt</h3>
+      <p>Perancangan turbin angin sumbu horizontal (HAWT) kapasitas 100 Watt untuk lokasi Pantai Labuhan Haji menggunakan simulasi aerodinamika.</p>
+      <div class="tags"><span>QBlade</span><span>Energi Terbarukan</span><span>Aerodinamika</span></div>
+      <span class="link">Proyek Akademik — UNRAM</span>
+    </article>
+
+    <article class="card" data-part="PN-003">
+      <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
+        <circle cx="32" cy="32" r="18"/>
+        <path d="M32 32 L32 16M32 32 L44 40M32 32 L20 42" stroke-dasharray="2 2"/>
+        <circle cx="32" cy="32" r="3"/>
+      </svg>
+      <h3>Mesin Pengiris Bawang Tipe Rotary</h3>
+      <p>Rancang bangun mesin pengiris bawang rotary bertenaga motor listrik untuk meningkatkan produktivitas dan efisiensi kerja UMKM.</p>
+      <div class="tags"><span>SolidWorks</span><span>Rancang Bangun</span><span>UMKM</span></div>
+      <span class="link">Kompetisi Nasional — Juara 3</span>
+    </article>
+
+    <article class="card" data-part="PN-004">
+      <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M20 44a12 12 0 1 1 20 -8" stroke-dasharray="3 2"/>
+        <path d="M40 36l4-4 2 6" fill="none"/>
+        <rect x="14" y="44" width="16" height="10" rx="1"/>
+        <circle cx="22" cy="49" r="1.6"/>
+      </svg>
+      <h3>Simulasi Siklus Rankine PLTU 74 MW</h3>
+      <p>Simulasi dan analisis kinerja siklus Rankine dengan reheat pada pembangkit listrik tenaga uap 74 MW menggunakan software DWSIM.</p>
+      <div class="tags"><span>DWSIM</span><span>Termodinamika</span><span>PLTU</span></div>
+      <span class="link">Proyek Akademik — UNRAM</span>
+    </article>
+
+  </div>
+
+  <div class="dim-divider" id="capabilities">
+    <span class="cap"></span>
+    <div class="line"><svg class="left" width="10" height="8"><path d="M9 1L1 4L9 7" stroke="currentColor" fill="none" stroke-width="1.4"/></svg></div>
+    <div class="label"><span class="num">03</span><h2>Keahlian</h2><span class="of">/ 06</span></div>
+    <div class="line"><svg class="right" width="10" height="8"><path d="M1 1L9 4L1 7" stroke="currentColor" fill="none" stroke-width="1.4"/></svg></div>
+    <span class="cap"></span>
+  </div>
+
+  <div class="cap-grid">
+    <div class="cap-col">
+      <h4>Software Desain</h4>
+      <ul>
+        <li>AutoCAD</li>
+        <li>SolidWorks</li>
+        <li>Autodesk Inventor</li>
+        <li>ANSYS</li>
+      </ul>
+    </div>
+    <div class="cap-col">
+      <h4>Software Analisis</h4>
+      <ul>
+        <li>DWSIM</li>
+        <li>QBlade</li>
+        <li>Analisis Teknik</li>
+        <li>Perancangan Mesin</li>
+      </ul>
+    </div>
+    <div class="cap-col">
+      <h4>Lapangan & Produksi</h4>
+      <ul>
+        <li>On-site Measurement</li>
+        <li>Gambar Kerja Produksi</li>
+        <li>Koordinasi Workshop</li>
+        <li>Sistem Hidrolik</li>
+      </ul>
+    </div>
+    <div class="cap-col">
+      <h4>Lainnya</h4>
+      <ul>
+        <li>Problem Solving</li>
+        <li>Kerja Tim</li>
+        <li>Komunikasi Teknis</li>
+        <li>Ahli K3 Umum</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="dim-divider" id="experience">
+    <span class="cap"></span>
+    <div class="line"><svg class="left" width="10" height="8"><path d="M9 1L1 4L9 7" stroke="currentColor" fill="none" stroke-width="1.4"/></svg></div>
+    <div class="label"><span class="num">04</span><h2>Riwayat Revisi</h2><span class="of">/ 06</span></div>
+    <div class="line"><svg class="right" width="10" height="8"><path d="M1 1L9 4L1 7" stroke="currentColor" fill="none" stroke-width="1.4"/></svg></div>
+    <span class="cap"></span>
+  </div>
+
+  <table class="rev-table">
+    <thead>
+      <tr><th>Rev</th><th>Peran & Organisasi</th><th>Deskripsi</th><th>Tanggal</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="rev-id">C</td>
+        <td><div class="role">Mechanical Drafter (Kontrak)</div><div class="org">PT Bendera Merah Grup, Lombok Tengah</div></td>
+        <td>Merancang gambar teknik penggantian mesin produksi dari survei lapangan hingga gambar kerja siap produksi; merancang sistem hidrolik silinder press dan tempat penyimpanan PET berkapasitas 10 ton.</td>
+        <td class="date">Jun — Jul 2026</td>
+      </tr>
+      <tr>
+        <td class="rev-id">B</td>
+        <td><div class="role">Finalis</div><div class="org">Mechanical Design Competition, Mecshsense</div></td>
+        <td>Lolos ke babak final kompetisi desain mekanikal tingkat nasional.</td>
+        <td class="date">2026</td>
+      </tr>
+      <tr>
+        <td class="rev-id">A</td>
+        <td><div class="role">Juara 3</div><div class="org">Lomba Nasional Tahunan Rancang Bangun Mesin</div></td>
+        <td>Meraih Juara 3 dengan proyek Mesin Pengiris Bawang Tipe Rotary bertenaga motor listrik.</td>
+        <td class="date">2025</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="dim-divider" id="education">
+    <span class="cap"></span>
+    <div class="line"><svg class="left" width="10" height="8"><path d="M9 1L1 4L9 7" stroke="currentColor" fill="none" stroke-width="1.4"/></svg></div>
+    <div class="label"><span class="num">05</span><h2>Edukasi & Sertifikasi</h2><span class="of">/ 06</span></div>
+    <div class="line"><svg class="right" width="10" height="8"><path d="M1 1L9 4L1 7" stroke="currentColor" fill="none" stroke-width="1.4"/></svg></div>
+    <span class="cap"></span>
+  </div>
+
+  <div class="ed-grid">
+    <div class="ed-item">
+      <h4>S1 Teknik Mesin</h4>
+      <p>Universitas Mataram (UNRAM) — IPK 3,47/4,00 (Semester 4)</p>
+      <span class="date">Agt 2024 — Sekarang</span>
+    </div>
+    <div class="ed-item">
+      <h4>Ahli K3 Umum</h4>
+      <p>Porkesra (Pelopor K3 Nusantara)</p>
+      <span class="date">2026</span>
+    </div>
+    <div class="ed-item">
+      <h4>Petugas P3K / First Aid</h4>
+      <p>Porkesra (Pelopor K3 Nusantara)</p>
+      <span class="date">2026</span>
+    </div>
+    <div class="ed-item">
+      <h4>Pengenalan Pengoperasian PLTU Berbasis Simulator</h4>
+      <p>PT Pusat Kompetensi & Teknologi Indonesia (PKTI)</p>
+      <span class="date">2024</span>
+    </div>
+    <div class="ed-item">
+      <h4>Successful Career Planning for Engineering</h4>
+      <p>International Webinar — SmartPath</p>
+      <span class="date">2025</span>
+    </div>
+    <div class="ed-item">
+      <h4>Intermediate 2 English Speaking Course</h4>
+      <p>Speaking Partner, Kampung Inggris</p>
+      <span class="date">2025</span>
+    </div>
+  </div>
+
+  <div class="titleblock" id="contact">
+    <div class="tb-head">
+      <h2>Mari Bekerja Sama</h2>
+      <a class="cta" href="mailto:juandasaputraaa134@gmail.com">Kirim Email</a>
+    </div>
+    <div class="tb-grid">
+      <div class="tb-cell"><span class="k">Drawn By</span><span class="v">J. Saputra</span></div>
+      <div class="tb-cell"><span class="k">Contact</span><span class="v"><a href="mailto:juandasaputraaa134@gmail.com">juandasaputraaa134@gmail.com</a></span></div>
+      <div class="tb-cell"><span class="k">Scale</span><span class="v">1 : 1</span></div>
+      <div class="tb-cell"><span class="k">Sheet</span><span class="v">6 OF 6</span></div>
+      <div class="tb-cell"><span class="k">Location</span><span class="v">Mataram, NTB, ID</span></div>
+      <div class="tb-cell"><span class="k">LinkedIn</span><span class="v"><a href="https://linkedin.com/in/juanda-saputra" target="_blank" rel="noopener">/in/juanda-saputra</a></span></div>
+      <div class="tb-cell"><span class="k">Telepon</span><span class="v">+62 812-4621-3782</span></div>
+      <div class="tb-cell"><span class="k">Date</span><span class="v" id="today-date">—</span></div>
+    </div>
+  </div>
+
+  <footer class="legal">© 2026 JUANDA SAPUTRA — TEKNIK MESIN, UNIVERSITAS MATARAM</footer>
+
+</div>
+
+<script>
+  document.getElementById('today-date').textContent = new Date().toLocaleDateString('id-ID', { year:'numeric', month:'2-digit', day:'2-digit' });
+</script>
+
+</body>
+</html>
